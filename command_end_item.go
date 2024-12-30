@@ -2,48 +2,36 @@ package ebay
 
 import (
 	"encoding/xml"
-	"errors"
 )
 
 type EndItem struct {
 	ItemID       string
-	EndingReason string
+	EndingReason EndingReason
 }
+
+type EndingReason string
 
 const (
-	CustomCode        string = "CustomCode"
-	Incorrect         string = "Incorrect"
-	LostOrBroken      string = "LostOrBroken"
-	NotAvailable      string = "NotAvailable"
-	OtherListingError string = "OtherListingError"
-	ProductDeleted    string = "ProductDeleted"
-	SellToHighBidder  string = "SellToHighBidder"
-	Sold              string = "Sold"
+	CustomCode        EndingReason = "CustomCode"
+	Incorrect         EndingReason = "Incorrect"
+	LostOrBroken      EndingReason = "LostOrBroken"
+	NotAvailable      EndingReason = "NotAvailable"
+	OtherListingError EndingReason = "OtherListingError"
+	ProductDeleted    EndingReason = "ProductDeleted"
+	SellToHighBidder  EndingReason = "SellToHighBidder"
+	Sold              EndingReason = "Sold"
 )
-
-var validReasons = map[string]bool{
-	CustomCode:        true,
-	Incorrect:         true,
-	LostOrBroken:      true,
-	NotAvailable:      true,
-	OtherListingError: true,
-	ProductDeleted:    true,
-	SellToHighBidder:  true,
-	Sold:              true,
-}
 
 func (c EndItem) CallName() string {
 	return "EndItem"
 }
 
-func (c EndItem) Body() (interface{}, error) {
-	if !validReasons[c.EndingReason] {
-		return nil, errors.New("invalid ending reason")
-	}
+func (c EndItem) Body() interface{} {
 	type Item struct {
 		EndItem
 	}
-	return Item{c}, nil
+
+	return Item{c}
 }
 
 func (c EndItem) ParseResponse(r []byte) (EbayResponse, error) {
