@@ -2,6 +2,7 @@ package ebay
 
 import (
 	"encoding/xml"
+	"errors"
 )
 
 type EndItem struct {
@@ -20,16 +21,29 @@ const (
 	Sold              string = "Sold"
 )
 
+var validReasons = map[string]bool{
+	CustomCode:        true,
+	Incorrect:         true,
+	LostOrBroken:      true,
+	NotAvailable:      true,
+	OtherListingError: true,
+	ProductDeleted:    true,
+	SellToHighBidder:  true,
+	Sold:              true,
+}
+
 func (c EndItem) CallName() string {
 	return "EndItem"
 }
 
-func (c EndItem) Body() interface{} {
+func (c EndItem) Body() (interface{}, error) {
+	if !validReasons[c.EndingReason] {
+		return nil, errors.New("invalid ending reason")
+	}
 	type Item struct {
 		EndItem
 	}
-
-	return Item{c}
+	return Item{c}, nil
 }
 
 func (c EndItem) ParseResponse(r []byte) (EbayResponse, error) {
