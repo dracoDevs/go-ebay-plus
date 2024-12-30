@@ -9,6 +9,17 @@ type EndItem struct {
 	EndingReason string
 }
 
+const (
+	CustomCode        EndingReasonType = "CustomCode"
+	Incorrect         EndingReasonType = "Incorrect"
+	LostOrBroken      EndingReasonType = "LostOrBroken"
+	NotAvailable      EndingReasonType = "NotAvailable"
+	OtherListingError EndingReasonType = "OtherListingError"
+	ProductDeleted    EndingReasonType = "ProductDeleted"
+	SellToHighBidder  EndingReasonType = "SellToHighBidder"
+	Sold              EndingReasonType = "Sold"
+)
+
 func (c EndItem) CallName() string {
 	return "EndItem"
 }
