@@ -35,14 +35,16 @@ fmt.Println(response.BuyItNowPrice)
 
 ## Implemented API Calls
 
-The following api calls are currently implemented, with limited field support:
+The following API calls are currently implemented, with limited field support:
 
 -   AddFixedPriceItem
 -   VerifyAddFixedPriceItem
 -   ReviseFixedPriceItem
 -   GetItem
 
-Implemented in go-ebay-plus
+## Implemented in go-ebay-plus
+
+The following API calls have been added into this fork for extended usage:
 
 -   EndItem
 
