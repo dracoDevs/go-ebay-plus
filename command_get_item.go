@@ -34,6 +34,7 @@ type GetItemResponse struct {
 		SellingStatus struct {
 			ListingStatus string
 			QuantitySold  int64
+			CurrentPrice  float64
 		}
 	}
 }
