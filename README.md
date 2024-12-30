@@ -1,4 +1,4 @@
-# go-ebay
+# go-ebay-plus
 
 This package runs api requests against eBay's XML Trading API.
 
@@ -37,10 +37,14 @@ fmt.Println(response.BuyItNowPrice)
 
 The following api calls are currently implemented, with limited field support:
 
- - AddFixedPriceItem
- - VerifyAddFixedPriceItem
- - ReviseFixedPriceItem
- - GetItem
+-   AddFixedPriceItem
+-   VerifyAddFixedPriceItem
+-   ReviseFixedPriceItem
+-   GetItem
+
+Implemented in go-ebay-plus
+
+-   EndItem
 
 If you'd like to help out, either completing these api calls, or adding new ones would be great!
 
@@ -68,8 +72,8 @@ conf := EbayConf{
 
 ## Contributing
 
- - Add tests
- - Add code
- - Make sure `make test` passes
- - If possible, also add integration tests (`make integration-test`). You'll need an eBay developer account to run these
- - Send pull request against master
+-   Add tests
+-   Add code
+-   Make sure `make test` passes
+-   If possible, also add integration tests (`make integration-test`). You'll need an eBay developer account to run these
+-   Send pull request against master
