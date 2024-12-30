@@ -5,8 +5,8 @@ import (
 )
 
 type EndItem struct {
-	ItemID       string
-	EndingReason EndingReason
+	ItemID       string `xml:",innerxml"`
+	EndingReason EndingReason `xml:",innerxml"`
 }
 
 type EndingReason string
@@ -27,11 +27,13 @@ func (c EndItem) CallName() string {
 }
 
 func (c EndItem) Body() interface{} {
-	type Item struct {
-		EndItem
+	return struct {
+		ItemID       string `xml:",innerxml"`
+		EndingReason EndingReason `xml:",innerxml"`
+	}{
+		ItemID:       c.ItemID,
+		EndingReason: c.EndingReason,
 	}
-
-	return Item{c}
 }
 
 func (c EndItem) ParseResponse(r []byte) (EbayResponse, error) {
