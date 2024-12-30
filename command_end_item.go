@@ -10,14 +10,14 @@ type EndItem struct {
 }
 
 const (
-	CustomCode        EndingReasonType = "CustomCode"
-	Incorrect         EndingReasonType = "Incorrect"
-	LostOrBroken      EndingReasonType = "LostOrBroken"
-	NotAvailable      EndingReasonType = "NotAvailable"
-	OtherListingError EndingReasonType = "OtherListingError"
-	ProductDeleted    EndingReasonType = "ProductDeleted"
-	SellToHighBidder  EndingReasonType = "SellToHighBidder"
-	Sold              EndingReasonType = "Sold"
+	CustomCode        string = "CustomCode"
+	Incorrect         string = "Incorrect"
+	LostOrBroken      string = "LostOrBroken"
+	NotAvailable      string = "NotAvailable"
+	OtherListingError string = "OtherListingError"
+	ProductDeleted    string = "ProductDeleted"
+	SellToHighBidder  string = "SellToHighBidder"
+	Sold              string = "Sold"
 )
 
 func (c EndItem) CallName() string {
