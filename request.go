@@ -18,7 +18,9 @@ func (c ebayRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		},
 	}
 
-	if err := e.EncodeToken(startElement); err != nil {
+	err := e.EncodeToken(startElement)
+
+	if err != nil {
 		return err
 	}
 
@@ -26,22 +28,20 @@ func (c ebayRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		EbayAuthToken string `xml:"eBayAuthToken"`
 	}
 
-	if err := e.Encode(RequesterCredentials{EbayAuthToken: c.conf.AuthToken}); err != nil {
+	err = e.Encode(
+		RequesterCredentials{
+			EbayAuthToken: c.conf.AuthToken,
+		},
+	)
+
+	if err != nil {
 		return err
 	}
 
-	if c.command.CallName() == "EndItem" {
-		endItem := c.command.Body().(EndItem)
-		if err := e.Encode(EndItem{
-			ItemID:       endItem.ItemID,
-			EndingReason: endItem.EndingReason,
-		}); err != nil {
-			return err
-		}
-	} else {
-		if err := e.Encode(c.command.Body()); err != nil {
-			return err
-		}
+	err = e.Encode(c.command.Body())
+
+	if err != nil {
+		return err
 	}
 
 	endElement := xml.EndElement{
@@ -51,7 +51,9 @@ func (c ebayRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		},
 	}
 
-	if err := e.EncodeToken(endElement); err != nil {
+	err = e.EncodeToken(endElement)
+
+	if err != nil {
 		return err
 	}
 

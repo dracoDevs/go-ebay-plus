@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/dracoDevs/go-ebay-plus/utils"
 )
 
 type EbayConf struct {
@@ -43,6 +45,12 @@ func (e EbayConf) RunCommand(c Command) (EbayResponse, error) {
 	err := xml.NewEncoder(body).Encode(ec)
 	if err != nil {
 		return ebayResponse{}, err
+	}
+
+	if c.CallName() == "endItem" {
+		bodyStr := body.String()
+		bodyStr = utils.RemoveEndItemXML(bodyStr)
+		body = bytes.NewBufferString(bodyStr)
 	}
 
 	if e.Logger != nil {
