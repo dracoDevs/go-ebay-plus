@@ -1,6 +1,9 @@
 package utils
 
-import "bytes"
+import (
+	"bytes"
+	"strings"
+)
 
 func RemoveEndItemXML(xmlStr string) string {
 	startTag := "<EndItem>"
@@ -10,7 +13,10 @@ func RemoveEndItemXML(xmlStr string) string {
 	endIndex := bytes.Index([]byte(xmlStr), []byte(endTag))
 
 	if startIndex != -1 && endIndex != -1 && endIndex > startIndex {
-		xmlStr = xmlStr[:startIndex] + xmlStr[endIndex+len(endTag):]
+		innerContent := xmlStr[startIndex+len(startTag) : endIndex]
+		xmlStr = xmlStr[:startIndex] + innerContent + xmlStr[endIndex+len(endTag):]
+		xmlStr = strings.ReplaceAll(xmlStr, startTag, "")
+		xmlStr = strings.ReplaceAll(xmlStr, endTag, "")
 	}
 
 	return xmlStr
