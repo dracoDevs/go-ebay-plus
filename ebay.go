@@ -39,8 +39,8 @@ func (e EbayConf) RunCommand(c Command) (EbayResponse, error) {
 
 	body := new(bytes.Buffer)
 	body.Write([]byte(xml.Header))
+	
 	err := xml.NewEncoder(body).Encode(ec)
-
 	if err != nil {
 		return ebayResponse{}, err
 	}
