@@ -5,8 +5,8 @@ import (
 )
 
 type EndItem struct {
-	ItemID       string `xml:"ItemID"`
-	EndingReason string `xml:"EndingReason"`
+	ItemID       string       `xml:"ItemID"`
+	EndingReason EndingReason `xml:"EndingReason"`
 }
 
 type EndingReason string
