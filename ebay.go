@@ -47,7 +47,7 @@ func (e EbayConf) RunCommand(c Command) (EbayResponse, error) {
 		return ebayResponse{}, err
 	}
 
-	if c.CallName() == "endItem" {
+	if c.CallName() == "EndItem" {
 		bodyStr := body.String()
 		bodyStr = utils.RemoveEndItemXML(bodyStr)
 		body = bytes.NewBufferString(bodyStr)
