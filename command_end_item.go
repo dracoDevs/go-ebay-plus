@@ -27,7 +27,13 @@ func (c EndItem) CallName() string {
 }
 
 func (c EndItem) Body() interface{} {
-	return c
+	return struct {
+		ItemID       string `xml:",innerxml"`
+		EndingReason EndingReason `xml:",innerxml"`
+	}{
+		ItemID:       c.ItemID,
+		EndingReason: c.EndingReason,
+	}
 }
 
 func (c EndItem) ParseResponse(r []byte) (EbayResponse, error) {

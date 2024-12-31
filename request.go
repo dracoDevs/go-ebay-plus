@@ -25,12 +25,12 @@ func (c ebayRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	}
 
 	type RequesterCredentials struct {
-		EBayAuthToken string `xml:"eBayAuthToken"`
+		EbayAuthToken string `xml:"eBayAuthToken"`
 	}
 
 	err = e.Encode(
 		RequesterCredentials{
-			EBayAuthToken: c.conf.AuthToken,
+			EbayAuthToken: c.conf.AuthToken,
 		},
 	)
 
