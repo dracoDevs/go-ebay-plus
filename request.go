@@ -38,11 +38,24 @@ func (c ebayRequest) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		return err
 	}
 
-	err = e.Encode(c.command.Body())
-
-	if err != nil {
-		return err
+	if c.command.CallName() == "EndItem" {
+		endItem := c.command.Body().(EndItem)
+		err = e.Encode(EndItem{
+			ItemID:       endItem.ItemID,
+			EndingReason: string(endItem.EndingReason),
+		})
+		if err != nil {
+			return err
+		}
+		return nil
+	} else {
+		err = e.Encode(c.command.Body())
+	
+		if err != nil {
+			return err
+		}
 	}
+
 
 	endElement := xml.EndElement{
 		Name: xml.Name{
