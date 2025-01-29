@@ -1,6 +1,8 @@
 package ebay
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
 type GetItem struct {
 	ItemID string
@@ -31,6 +33,9 @@ type GetItemResponse struct {
 	Item struct {
 		ItemID        string
 		Quantity      int64
+		ListingDetails struct {
+			StartTime string
+		}
 		SellingStatus struct {
 			ListingStatus string
 			QuantitySold  int64
