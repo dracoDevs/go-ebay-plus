@@ -31,10 +31,7 @@ func (c EndItem) Body() interface{} {
 		ItemID       string       `xml:"ItemID"`
 		EndingReason EndingReason `xml:"EndingReason"`
 	}
-	return EndItemStructured{
-		ItemID:       c.ItemID,
-		EndingReason: c.EndingReason,
-	}
+	return EndItemStructured{c.ItemID,c.EndingReason,}
 }
 
 func (c EndItem) ParseResponse(r []byte) (EbayResponse, error) {
