@@ -27,7 +27,11 @@ func (c EndItem) CallName() string {
 }
 
 func (c EndItem) Body() interface{} {
-	return EndItem{
+	type EndItemStructured struct {
+		ItemID       string       `xml:"ItemID"`
+		EndingReason EndingReason `xml:"EndingReason"`
+	}
+	return EndItemStructured{
 		ItemID:       c.ItemID,
 		EndingReason: c.EndingReason,
 	}
