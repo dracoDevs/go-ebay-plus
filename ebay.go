@@ -51,6 +51,8 @@ func (e EbayConf) RunCommand(c Command) (EbayResponse, error) {
 		bodyStr := body.String()
 		bodyStr = utils.RemoveEndItemXML(bodyStr)
 		body = bytes.NewBufferString(bodyStr)
+
+		fmt.Println("bodyStr", bodyStr)
 	}
 
 	if e.Logger != nil {
