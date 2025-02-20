@@ -27,11 +27,10 @@ func (c EndItem) CallName() string {
 }
 
 func (c EndItem) Body() interface{} {
-	type EndItemStructured struct {
-		ItemID       string       `xml:"ItemID"`
-		EndingReason EndingReason `xml:"EndingReason"`
+	return EndItem{
+		ItemID: c.ItemID,
+		EndingReason: c.EndingReason,
 	}
-	return EndItemStructured{c.ItemID,c.EndingReason,}
 }
 
 func (c EndItem) ParseResponse(r []byte) (EbayResponse, error) {
