@@ -4,13 +4,19 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 
-	"github.com/dracoDevs/go-ebay-plus/utils"
+	"github.com/dracoDevs/go-ebay-plus/internal/utils"
 )
+
+type Command interface {
+	Body() interface{}
+	CallName() string
+	ParseResponse([]byte) (EbayResponse, error)
+}
 
 type EbayConf struct {
 	baseUrl string
@@ -23,33 +29,26 @@ type EbayConf struct {
 
 func (e EbayConf) Sandbox() EbayConf {
 	e.baseUrl = "https://api.sandbox.ebay.com"
-
 	return e
 }
 
 func (e EbayConf) Production() EbayConf {
 	e.baseUrl = "https://api.ebay.com"
-
 	return e
 }
 
 func (e EbayConf) RunCommand(c Command) (EbayResponse, error) {
-	ec := ebayRequest{
-		conf:    e,
-		command: c,
-	}
+	ec := ebayRequest{conf: e, command: c}
 
 	body := new(bytes.Buffer)
 	body.Write([]byte(xml.Header))
-	
-	err := xml.NewEncoder(body).Encode(ec)
-	if err != nil {
-		return ebayResponse{}, err
+
+	if err := xml.NewEncoder(body).Encode(ec); err != nil {
+		return OtherEbayResponse{}, err
 	}
 
 	if c.CallName() == "EndItem" {
-		bodyStr := body.String()
-		bodyStr = utils.RemoveEndItemXML(bodyStr)
+		bodyStr := utils.RemoveTagXML(body.String(), c.CallName())
 		body = bytes.NewBufferString(bodyStr)
 	}
 
@@ -57,12 +56,7 @@ func (e EbayConf) RunCommand(c Command) (EbayResponse, error) {
 		e.Logger(body.String())
 	}
 
-	req, _ := http.NewRequest(
-		"POST",
-		fmt.Sprintf("%s/ws/api.dll", e.baseUrl),
-		body,
-	)
-
+	req, _ := http.NewRequest("POST", fmt.Sprintf("%s/ws/api.dll", e.baseUrl), body)
 	req.Header.Add("X-EBAY-API-DEV-NAME", e.DevId)
 	req.Header.Add("X-EBAY-API-APP-NAME", e.AppId)
 	req.Header.Add("X-EBAY-API-CERT-NAME", e.CertId)
@@ -71,30 +65,36 @@ func (e EbayConf) RunCommand(c Command) (EbayResponse, error) {
 	req.Header.Add("X-EBAY-API-COMPATIBILITY-LEVEL", strconv.Itoa(837))
 	req.Header.Add("Content-Type", "text/xml")
 
-	client := &http.Client{}
+	client := &http.Client{
+		// Transport: &http.Transport{
+		// 	Proxy: func(_ *http.Request) (*url.URL, error) {
+		// 		return url.Parse("http://127.0.0.1:8888")
+		// 	},
+		// },
+	}
 	resp, err := client.Do(req)
-
-	if urlErr, ok := err.(*url.Error); ok { // TODO: how to unit test this?
-		return ebayResponse{}, urlErr
-	} else if resp.StatusCode != 200 {
-		httpErr := httpError{
-			statusCode: resp.StatusCode,
+	if err != nil {
+		if urlErr, ok := err.(*url.Error); ok {
+			return OtherEbayResponse{}, urlErr
 		}
-		httpErr.body, _ = ioutil.ReadAll(resp.Body)
+		return OtherEbayResponse{}, err
+	}
+	defer resp.Body.Close()
 
-		return ebayResponse{}, httpErr
+	if resp.StatusCode != http.StatusOK {
+		httpErr := httpError{statusCode: resp.StatusCode}
+		httpErr.body, _ = io.ReadAll(resp.Body)
+		return OtherEbayResponse{}, httpErr
 	}
 
-	bodyContents, _ := ioutil.ReadAll(resp.Body)
-
+	bodyContents, _ := io.ReadAll(resp.Body)
 	if e.Logger != nil {
 		e.Logger(string(bodyContents))
 	}
 
 	response, err := c.ParseResponse(bodyContents)
-
 	if response.Failure() {
-		return response, ebayErrors(response.ResponseErrors())
+		return response, response.ResponseErrors()
 	}
 
 	return response, err

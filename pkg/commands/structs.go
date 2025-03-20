@@ -1,4 +1,42 @@
-package ebay
+package commands
+
+type Storefront struct {
+	StoreCategoryID string
+}
+
+type ReturnPolicy struct {
+	ReturnsAccepted, ReturnsAcceptedOption, ReturnsWithinOption, RefundOption, ShippingCostPaidByOption string
+}
+
+type ItemSpecifics struct {
+	NameValueList []NameValueList
+}
+
+type NameValueList struct {
+	Name  string
+	Value []string
+}
+
+type PictureDetails struct {
+	PictureURL string
+}
+
+type PrimaryCategory struct {
+	CategoryID string
+}
+
+type BestOfferDetails struct {
+	BestOfferEnabled bool
+}
+
+type BrandMPN struct {
+	Brand, MPN string
+}
+
+type ProductListingDetails struct {
+	UPC      string
+	BrandMPN BrandMPN
+}
 
 type ShippingDetails struct {
 	ShippingType                           string

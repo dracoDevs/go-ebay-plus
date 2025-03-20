@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-func RemoveEndItemXML(xmlStr string) string {
-	startTag := "<EndItem>"
-	endTag := "</EndItem>"
+func RemoveTagXML(xmlStr string, tagToRemove string) string {
+	startTag := "<" + tagToRemove + ">"
+	endTag := "</" + tagToRemove + ">"
 
 	startIndex := bytes.Index([]byte(xmlStr), []byte(startTag))
 	endIndex := bytes.Index([]byte(xmlStr), []byte(endTag))

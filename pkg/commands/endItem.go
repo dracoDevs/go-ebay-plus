@@ -1,7 +1,9 @@
-package ebay
+package commands
 
 import (
 	"encoding/xml"
+
+	"github.com/dracoDevs/go-ebay-plus/internal/ebay"
 )
 
 type EndItem struct {
@@ -33,18 +35,18 @@ func (c EndItem) Body() interface{} {
 	}
 }
 
-func (c EndItem) ParseResponse(r []byte) (EbayResponse, error) {
+func (c EndItem) ParseResponse(r []byte) (ebay.EbayResponse, error) {
 	var xmlResponse EndItemResponse
 	err := xml.Unmarshal(r, &xmlResponse)
 	return xmlResponse, err
 }
 
 type EndItemResponse struct {
-	ebayResponse
+	ebay.OtherEbayResponse
 
 	EndTime string `xml:"EndTime"`
 }
 
-func (r EndItemResponse) ResponseErrors() ebayErrors {
-	return r.ebayResponse.Errors
+func (r EndItemResponse) ResponseErrors() ebay.EbayErrors {
+	return r.OtherEbayResponse.Errors
 }

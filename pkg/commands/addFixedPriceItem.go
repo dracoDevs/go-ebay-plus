@@ -1,6 +1,10 @@
-package ebay
+package commands
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+
+	"github.com/dracoDevs/go-ebay-plus/internal/ebay"
+)
 
 type AddFixedPriceItem struct {
 	Currency              string
@@ -30,7 +34,7 @@ func (c AddFixedPriceItem) CallName() string {
 	return "AddFixedPriceItem"
 }
 
-func (c AddFixedPriceItem) ParseResponse(r []byte) (EbayResponse, error) {
+func (c AddFixedPriceItem) ParseResponse(r []byte) (ebay.EbayResponse, error) {
 	var xmlResponse AddFixedPriceItemResponse
 	err := xml.Unmarshal(r, &xmlResponse)
 
@@ -46,11 +50,11 @@ func (c AddFixedPriceItem) Body() interface{} {
 }
 
 type AddFixedPriceItemResponse struct {
-	ebayResponse
+	ebay.OtherEbayResponse
 
 	ItemID string
 }
 
-func (r AddFixedPriceItemResponse) ResponseErrors() ebayErrors {
-	return r.ebayResponse.Errors
+func (r AddFixedPriceItemResponse) ResponseErrors() ebay.EbayErrors {
+	return r.OtherEbayResponse.Errors
 }

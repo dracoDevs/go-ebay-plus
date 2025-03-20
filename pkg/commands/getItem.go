@@ -1,7 +1,9 @@
-package ebay
+package commands
 
 import (
 	"encoding/xml"
+
+	"github.com/dracoDevs/go-ebay-plus/internal/ebay"
 )
 
 type GetItem struct {
@@ -20,7 +22,7 @@ func (c GetItem) Body() interface{} {
 	return ItemID{c.ItemID}
 }
 
-func (c GetItem) ParseResponse(r []byte) (EbayResponse, error) {
+func (c GetItem) ParseResponse(r []byte) (ebay.EbayResponse, error) {
 	var xmlResponse GetItemResponse
 	err := xml.Unmarshal(r, &xmlResponse)
 
@@ -28,7 +30,7 @@ func (c GetItem) ParseResponse(r []byte) (EbayResponse, error) {
 }
 
 type GetItemResponse struct {
-	ebayResponse
+	ebay.OtherEbayResponse
 
 	Item struct {
 		ItemID        string
@@ -44,6 +46,6 @@ type GetItemResponse struct {
 	}
 }
 
-func (r GetItemResponse) ResponseErrors() ebayErrors {
-	return r.ebayResponse.Errors
+func (r GetItemResponse) ResponseErrors() ebay.EbayErrors {
+	return r.OtherEbayResponse.Errors
 }
